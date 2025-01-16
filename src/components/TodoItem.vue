@@ -15,7 +15,7 @@ export default{
 
   data(){
     return{
-      checked:false
+      checked:''
     }
   },
 
@@ -30,8 +30,9 @@ export default{
 
 <template>
   <div>
-    <li> 
-      <span @click="$emit('toggle-task', id)" :class="{completed: status }"> {{ text }}</span>
+    <li @click="$emit('toggle-task', id, checked)"> 
+      <input type="checkbox" @click.stop="$emit('change-status', id, checked)" :checked="status">
+      <span :class="{completed: status }"> {{ text }}</span>
       <button @click="sendEvent(id)" class="button">Удалить задачу</button>
     </li>
   </div>
@@ -47,10 +48,10 @@ export default{
     padding: 0.4rem;
     display: flex;
     position: relative;
+    cursor: pointer;
   }
   span{
     margin: 0;
-    cursor: pointer;
   }
   .completed{
     text-decoration: line-through;

@@ -13,7 +13,6 @@ export default {
       .then(response => response.json())
       .then(data=> {
         this.tasks = data.tasks;
-        console.log('данные получены', this.tasks)
       })
       .catch(error => console.error('Error loading tasks:', error))
   },
@@ -37,6 +36,12 @@ export default {
       if(task) {
         task.status = !task.status;
       }
+    },
+    changeStatus(id){
+      const task = this.tasks.find(t => t.id === id);
+      if(task) {
+        task.status = !task.status;
+      }
     }
   },
   components: {
@@ -48,15 +53,17 @@ export default {
 
 <template>
   <div>
-    <input type="text" v-model="newTask" placeholder="Введите новую задачу" name="newTask" class="new-task">
-
-    <button @keypress.enter="addTask" @click="addTask">Добавить задачу</button>
-
+    <form @submit.prevent="addTask">
+      <input type="text" v-model="newTask" placeholder="Введите новую задачу" name="newTask" class="new-task">
+      <input type="submit" value="Добавить задачу" class="button">
+    </form>
     <ul>
       <TodoItem v-for="(task) in tasks" :key="task.id" 
         :id="task.id" :text = "task.text" :status="task.status" 
         @delete-task="deleteTask(task.id)" 
-        @toggle-task="toggleTask(task.id)" />
+        @toggle-task="toggleTask(task.id)"
+        @change-status="changeStatus(task.id)"
+      />
       <li v-show="newTask.length > 0"><input type="checkbox">
         <p> {{ newTask }}</p></li>
     </ul>
@@ -65,7 +72,6 @@ export default {
 
 
 <style scoped>
-
 ul {
   list-style: none;
   display: flex;
@@ -96,7 +102,7 @@ p{
   outline: none;
   font-size: 14px;
 }
-button {
+.button {
   padding: 4px 16px;
   cursor: pointer;
   border: none;
@@ -104,8 +110,7 @@ button {
   background: linear-gradient(150deg, rgb(212, 247, 142), rgb(87, 236, 87) 100%);
   color: rgb(82, 82, 82);
 }
-button:hover{
+.button:hover{
   background: linear-gradient( 300deg, rgb(212, 247, 142), rgb(87, 236, 87));
-  /* font-weight: 600; */
 }
 </style>
